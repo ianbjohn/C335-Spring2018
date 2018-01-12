@@ -1,0 +1,12 @@
+#include <stdio.h>
+#include <windows.h>
+
+int main()
+{
+  while (1) {
+    printf("Hello, world!\n");
+    sleep(3000);
+  }
+
+  return 0;
+}
