@@ -1,0 +1,7 @@
+Ian Johnson, ianbjohn
+Lab 1
+1/12/18
+
+In this lab, I was able to get "Hello, world!" to print on the screen every three seconds. I was originally going to use <Windows.h>'s sleep() function to accomplish this, which operates on milliseconds; but I ended up taking the lab's advice and using <unistd.h> instead, whose sleep() function operates on seconds. I don't know for sure if there's a real preference between the two, or if one is "better" than the other, but it would be something interesting to look into.
+
+I learned the bare basics of emacs today, and already find it easier to use than VI. I tried printing the ASCII bell character in the program, but after some research I learned that it seems to be a deprecated feature on most modern computers/OSes, and I found this interesting. It doesn't seem to work on this machine unfortunately.
