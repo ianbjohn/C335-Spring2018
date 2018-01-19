@@ -1,0 +1,5 @@
+Things I learned:
+-getchar() returns an int instead of a char, and why (EOF)
+-how to use the gdb debugger (breakpoints, memory dumping)
+
+-I was rusty on Unix, so it was a bit of a challenge getting back on par with the terminal and the environment. It was also tricky writing my own Makefile for the poly/dump program, but now I feel more comfortable about it.
