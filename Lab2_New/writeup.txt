@@ -1,5 +1,10 @@
+Ian Johnson
+ianbjohn
+
 Things I learned:
--getchar() returns an int instead of a char, and why (EOF)
+-getchar() returns an int instead of a char, because the EOF "character" needs to be a value greater than 255
 -how to use the gdb debugger (breakpoints, memory dumping)
 
 -I was rusty on Unix, so it was a bit of a challenge getting back on par with the terminal and the environment. It was also tricky writing my own Makefile for the poly/dump program, but now I feel more comfortable about it.
+
+-I was also rusty on all the format characters for the printf function, but got a better feel for it when I was working on the memory dump code. I know there's still a lot more to it, as I remember learning a lot about it at the end of C291, so I still need to research it more so that I can be completely refreshed. I tried just using tabs at first instead of column alignment, but learned the hard way that that doesn't exactly work as intended.
