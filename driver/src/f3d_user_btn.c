@@ -23,6 +23,6 @@ void f3d_user_btn_init(void){
 
 /*reads the User Button*/
 int f3d_user_btn_read(void){
-  int input = GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0);;
+  int input = GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0);
   return input;
 }

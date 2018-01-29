@@ -24,10 +24,14 @@ int main(void){
 
   int counter = 1; //keeps track of which LEDs should currently be lit
   int pause = 0;  //toggles between 0 and 1 when the button is pressed. Program is paused when this is set to 1
+
+  
   while(1) {
     if (f3d_user_btn_read())
-      pause ^= 1;
-
+      pause = 1;  //pause/unpause program
+    else
+      pause = 0;
+    
     if (!pause) {
       f3d_led_on(counter);
       delay();
