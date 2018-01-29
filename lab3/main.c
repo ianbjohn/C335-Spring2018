@@ -31,9 +31,8 @@ int main(void){
       pause = 1;  //pause/unpause program
     else
       pause = 0;
-    
     if (!pause) {
-      f3d_led_on(counter);
+      f3d_led_on(counter);	//light up the right LED respective of the counter
       delay();
       if (++counter >= 8) {
 	//flash if the counter rolled over 8, and then reset counter
