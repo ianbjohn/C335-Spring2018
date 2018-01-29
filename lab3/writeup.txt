@@ -1,0 +1,18 @@
+C335
+Lab 3
+1/26/2018
+Ian Johnson (ianbjohn)
+Partner: Timothy Jones (jonestg)
+
+1.) Specs:
+	-8Kb RAM, 128Kb flash RAM
+2.) GPIO - General Purpose Input/Output
+
+4.) The green LEDs are at port E and have pins 11 and 15
+5.) GPIO_Mode, GPIO_OType, GPIO_Pin, GPIO_PuPd, GPIO_Speed
+
+Difficulties:
+-Getting an integer input to correctly map to a sequence of LEDs was challenging, and we eventually just settled on a switch/case block to make things easier.
+-Getting everything set up initially was also a hurdle. It took me a while to realize I'd forgotten to add function definitions in the two driver header files. I feel like the more I work on multi-file C projects the less often simple mistakes like this will happen
+-It was also unintuitive to me at first that the program had to delay AFTER an LED was set, but once I thought about it this made sense.
+
