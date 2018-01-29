@@ -26,10 +26,10 @@ int main(void){
   int pause = 0;  //toggles between 0 and 1 when the button is pressed. Program is paused when this is set to 1
   while(1) {
     if (f3d_user_btn_read())
-      pause ^= 1;
+      pause ^= 1;		//pause/unpause program if button was pressed
 
     if (!pause) {
-      f3d_led_on(counter);
+      f3d_led_on(counter);	//light up the right LED respective of the counter
       delay();
       if (++counter >= 8) {
 	//flash if the counter rolled over 8, and then reset counter
