@@ -1,4 +1,4 @@
-text
+	.text
     .syntax unified
     .thumb
     .global inc 
