@@ -2,6 +2,9 @@ GCC_OPTIONS = -g -O1 -mcpu=cortex-m0 -mthumb
 AS_OPTIONS = -g -mcpu=cortex-m0 -mthumb
 LINK_OPTIONS = -g -mcpu=cortex-m0 -mthumb --specs=rdimon.specs -lc -lrdimon
 
+test: HW1.elf
+	qemu-system-arm -machine versatilepb -cpu cortex-m3 -nographic -monitor null -serial null -semihosting -kernel HW1.elf
+
 HW1.elf: test.o t1.o
 	arm-none-eabi-gcc $(LINK_OPTIONS) test.o t1.o -o HW1.elf
 
