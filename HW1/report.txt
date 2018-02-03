@@ -3,8 +3,8 @@ C335
 HW1
 1/31/2018
 
-1.) The state variable is at address 0x
-2.) The state variable is at address 0x
+1.) The state variable is at address 0x00012fe8
+2.) The state_counter variable is at address 0x00012fec
 3.) The function stop_light() starts at address 0x00008af8, and ends at 0x00008b87, so it is 144 bytes long
 4.) The function inc() starts at address 0x00008ba0, and ends at 0x00008ba3, so it is 4 bytes long
-5.) 
+5.) The largest function in the executable appears to be realloc or malloc
