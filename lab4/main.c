@@ -44,12 +44,26 @@ int main(void) {
   setvbuf(stdin, NULL, _IONBF, 0);
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
+
+  printf("Hello, world!\n");
   
-  //printf("Test\n");
-  while (1){
-    putstring("Hello World\n");
-    delay();
- }
+  int c;
+  int wordcount = 0, linecount = 1, charactercount = 0;
+
+  while ((c = getchar()) != 0x1b) { //esc
+    putchar(c);
+    charactercount++;
+    if (c == ' ')
+      wordcount++;
+    else if (c == '\n')
+      linecount++;
+  }
+
+  /*
+  while (1) {
+    putchar(getchar());
+  }
+  */
 }
 
 #ifdef USE_FULL_ASSERT

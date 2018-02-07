@@ -1,0 +1,1 @@
+properly transferring the wordcount program over to this new project was difficult. I also had trouble getting newlib and printf() to work properly.
