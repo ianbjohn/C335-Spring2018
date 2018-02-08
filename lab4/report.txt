@@ -1,1 +1,14 @@
-properly transferring the wordcount program over to this new project was difficult. I also had trouble getting newlib and printf() to work properly.
+Ian Johnson
+C335
+Lab 4
+2/8/2018
+
+1.) 2 Connections are required for UART; one for sending (transferring) and one for receiving.
+2.) Alternate functions allow flexibility depending on the specific circumstances of a board setup. Some pins might be used for different things, so multiple options need to be available.
+3.) Baud is how much information can be transmitted in a given amount of time, usually in pulses per second. In the case of UART, one bit is transferred at a time, so it can be thought of as how many bits can be transferred per second.
+4.) printf() is nothing more than a standard library function. Since the STM board doesn't have an OS or any standard library of its own, printf() doesn't mean anything unless it's defined somewhere, which is why newlib is required.
+5.) 
+
+
+
+Properly transferring the wordcount program over to this new project was difficult. I also had trouble getting newlib and printf() to work properly. I initially thought something was wrong since I had a test printf() call at the beginning of the program which didn't seem to be running. It wasn't until I put it in a while loop that I realized it actually did work.

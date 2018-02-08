@@ -23,6 +23,7 @@
  * 
  * 
  */
+//Code added by Ian Johnson
 /* Code: */
 
 #include <f3d_uart.h>
@@ -45,8 +46,6 @@ int main(void) {
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
 
-  printf("Hello, world!\n");
-  
   int c;
   int wordcount = 0, linecount = 1, charactercount = 0;
 
@@ -58,10 +57,13 @@ int main(void) {
     else if (c == '\n')
       linecount++;
   }
+  wordcount++; //it's likely that there wasn't a space before the end of the input, so account for a potential off-by-one error
+
+  printf("\n%d %d %d\n", linecount, wordcount, charactercount);
 
   /*
   while (1) {
-    putchar(getchar());
+    putchar(getchar()); //receive user input and send it back to computer, printing it to the screen
   }
   */
 }
