@@ -1,0 +1,21 @@
+-What does CS pin do? 
+	-Enables the correct device for communication. It is used to signal to the slave when a transfer of data is starting and ending.
+
+-WHy do you set the CS pin high at the end of the pin initilializations?
+	-It is part of the standard protocol to signal that a transaction needs to occur (Setting the pin to low) and signalling that a transaction has successfully occured (Setting the pin to high). Read, write both do this.
+
+-How do you hook up multiple peripherals on one SPI bus?
+	-By using the CS pin to ensure that the data is directed at the correct slave device.
+
+-STM has Operating Frequency of 72MHz. When initializing SPI1, what do you need to set the baud rate prescaler to?
+	-8
+-What is the resulting frequency?
+
+
+-Does a peripheral (slave) need to be configured with the transmission speed before it can communicate with the mictocontroller (master?)
+	-Yes
+-Why would you want to be able to do on-the-fly changes in transmission speed?
+
+
+Difficulties:
+	-Getting the LEDs to display properly, Getting UART to correctly transmit the data (Spend an entire office hours session getting this to work.)
