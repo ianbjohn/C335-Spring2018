@@ -23,6 +23,7 @@ void delay(void) {
 }
 
 int main(void){
+  //printf("test");
   f3d_uart_init();
   f3d_led_init();
   f3d_user_btn_init();
@@ -31,13 +32,15 @@ int main(void){
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
 
+  printf("Test");
+
 
   float tester[3];
   int axis = 0; //0 - x, 1 - y, 2 - z
   char axischar;
  	while(1){
 		//user input via button
-		if (user_btn_read() == 1) {
+		if (f3d_user_btn_read() == 1) {
 		  delay();
 			if (++axis > 2)
 				axis = 0;
