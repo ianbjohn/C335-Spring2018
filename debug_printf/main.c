@@ -1,9 +1,9 @@
 /*
 FILENAME: main.c
 USER: Ian Johnson (ianbjohn)
-PARTNER: Kelley Wheeler (kellwhee)
+PARTNER:
 ASSIGNMENT: lab5
-DATE CREATED: 2/9/2018
+DATE CREATED: 2/16/18
  */
 //main.c for lab6
 #include <f3d_uart.h>
