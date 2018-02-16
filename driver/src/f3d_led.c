@@ -15,46 +15,42 @@ Authors:
 void f3d_led_init(void) {
   GPIO_InitTypeDef GPIO_InitStructure;
   GPIO_StructInit(&GPIO_InitStructure);
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10|GPIO_Pin_11|GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 |GPIO_Pin_15;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOE, ENABLE);
+
   GPIO_Init(GPIOE, &GPIO_InitStructure);
 }
 /*Turns on the appropriate led as specified by the parameter.*/
 void f3d_led_on(int led) {
-  switch(led){
-  case 0:
-    GPIOE->BSRR = GPIO_Pin_8;
-    break;
-  case 1:
-    GPIOE->BSRR = GPIO_Pin_9;
-    break;
-  case 2:
-    GPIOE->BSRR = GPIO_Pin_10;
-    break;
-  case 3:
-    GPIOE->BSRR = GPIO_Pin_11;
-    break;
-  case 4:
-    GPIOE->BSRR = GPIO_Pin_12;
-    break;
-  case 5:
-    GPIOE->BSRR = GPIO_Pin_13;
-    break;
-  case 6:
-    GPIOE->BSRR = GPIO_Pin_14;
-    break;
-  case 7:
-    GPIOE->BSRR = GPIO_Pin_15;
-    break;
-  default:
-    break;
-  }
+  GPIOE->BSRR = GPIO_Pin_8 << (led + 1) % 8;
 }
 
+/*Turns off the approiate led as specified by the parameter*/ 
+void f3d_led_off(int led) {
+  GPIOE->BRR = GPIO_Pin_8 << (led + 1) % 8;
+} 
+
+/*Turns on all LEDs*/
+void f3d_led_all_on(void) {
+  int led;
+  for(led = 0; led <= 7; led++){
+    f3d_led_on(led);
+  }
+} 
+
+/*Turns off all LEDs*/
+void f3d_led_all_off(void) {
+  int led;
+  for(led = 0; led <= 7; led++){
+    f3d_led_off(led);
+  }
+} 
+
+/* led.c ends here */
 /*Turns off the approiate led as specified by the parameter*/ 
 void f3d_led_off(int led) {
   switch(led){
