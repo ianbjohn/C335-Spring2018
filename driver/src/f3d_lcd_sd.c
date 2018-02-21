@@ -271,6 +271,26 @@ void f3d_lcd_fillScreen(uint16_t color) {
   }
 }
 
+void f3d_lcd_fillScreen2(uint16_t color) {
+  uint8_t y;
+  uint16_t x[ST7735_width];
+  for (y = 0; y < ST7735_width; y++) x[y] = color;
+  f3d_lcd_setAddrWindow (0,0,ST7735_width-1,ST7735_height-1,MADCTLGRAPHICS);
+  for (y=0;y<ST7735_height; y++) {
+    f3d_lcd_pushColor(x,ST7735_width);
+  }
+}
+
+void f3d_lcd_fillArea(uint8_t x0, uint8_t y0, uint8_t width, uint8_t height, uint16_t color) {
+  //similar to fillScreen2, just with a user-defined boundary
+  uint8_t y;
+  uint16_t x[width];
+  for (y = 0; y < width; y++) x[y] = color;
+  f3d_lcd_setAddrWindow(x0, y0, width - 1, height - 1, MADCTLGRAPHICS);
+  for (y = 0; y < height; y++)
+    f3d_lcd_pushColor(x, width);
+}
+
 void f3d_lcd_drawPixel(uint8_t x, uint8_t y, uint16_t color) {
   if ((x >= ST7735_width) || (y >= ST7735_height)) return;
   f3d_lcd_setAddrWindow(x,y,x+1,y+1,MADCTLGRAPHICS);
