@@ -50,7 +50,7 @@ int main(void) {
       }
       else if (gyro_data[i] >= 0) { //positive values go up
 	f3d_lcd_fillArea((ST7735_width / 3) * i, 0, ST7735_width / 3, (ST7735_height / 2) - (((int)gyro_data[i] * (ST7735_height / 2)) / MAX), RED); //clear any remaining "positive" area
-	f3d_lcd_fillArea((ST7735_width / 3) * i, (ST7735_height / 2) - (((int)(gyro_data[i]) * (ST7735_height / 2)) / 1000), ST7735_width / 3, ((int)(gyro_data[i]) * (ST7735_height / 2)) / MAX, WHITE); //draw bar
+	f3d_lcd_fillArea((ST7735_width / 3) * i, (ST7735_height / 2) - (((int)(gyro_data[i]) * (ST7735_height / 2)) / MAX), ST7735_width / 3, ((int)(gyro_data[i]) * (ST7735_height / 2)) / MAX, WHITE); //draw bar
 	f3d_lcd_fillArea((ST7735_width / 3) * i, ST7735_height / 2, ST7735_width / 3, ST7735_height / 2, RED); //clear "negative" area
       }
     }
