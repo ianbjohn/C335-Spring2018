@@ -1,8 +1,24 @@
+Ian Johnson
+C335
+Lab 8
+2/22/2018
+
+1.) Printf debugging is useful in that it's easy to get a general idea of where your program might be messing up. For example, if you put a printf after a function call, and nothing gets printed, it's a good indication that something's going wrong in that function. From there, you can investigate that function, and it's much easier to then pinpoint where it might be. You can also print the return value of a function, and then compare it to the expected value. One issue to all of this, though, is that if there's an issue going on in a function, it might be somewhere where printf() can't be called, like a lower-level driver function. System functions like printf should typically only be callable from the higher-level code.
+
+2.) The LCD communicates with the rest of the board via SPI. It therefore needs to use SPI's functions, but they should be called from the LCD functions so that there's good cohesion within the program. Also, SPI's applications aren't limited to just the LCD, so it makes sense that it has its own separate functions.
+
+3.) CS_DEASSERT() signals that a transmission has been completed by setting pin PB12 back to low
+
+4.) Each character is an array of 5 bytes. The characters themselves are made up of 5 pixels wide by 8 pixels tall. So the first byte corresponds to the leftmost column of pixels (Going bottom-to-top), the second byte the second leftmost column, and so on.
+
+5.) 
 Speed for original fillscreen function: 90muS
 Speed for fillscreen function 2: 24muS
 ~3.75x faster
+(Screenshots should be somewhere in this folder on github)
+It takes advantage of the LCD being able to fill blocks of pixels at a time. This is, of course, faster than sending one pixel after another.
 
 
 Difficulty getting the LCD to show the data visually as a bar graph
--Would glitch out completely when showing data for the Y and Z axes
-
+-Would glitch out completely when showing data for the Y and Z axes. I had written a function called fillArea, which was essentially the same as fillScreen2, just tweaked to have x, y, width and height not be hard-coded. I finally discovered that when I was calling setAddrWindow, I was just passing it the width and height, not the origin PLUS the width and height (it taxes 2 points, rather than a point and a width and height.) After I fixed this, the LCD finally worked the way I wanted to.
+-There still is, however, the issue of flickering, even when I call the delay function at the end of all the main logic. My best guess is that the time it takes to calculate and draw all the bars takes longer than the refresh rate of the LCD screen, and so it takes more than one frame to execute, resulting in the flickering. I don't know if this is correct or not, and I couldn't find any information on this in the manual.

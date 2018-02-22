@@ -38,7 +38,7 @@ int main(void) {
     printf(",\n");
     printf("world\n");
     printf("!\n");
-    f3d_led_off(0);
+    f3d_led_off(0);  ///there is a noticeable delay thanks to these printfs
     printf("Hello\n");
     printf(",\n");
     printf("world\n");
