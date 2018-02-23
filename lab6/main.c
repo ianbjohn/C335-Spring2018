@@ -56,14 +56,12 @@ int main(void) {
     }
     //after drawing the bars, redraw the "axis" on top of it
     f3d_lcd_fillArea(0, ST7735_height / 2, ST7735_width, 1, BLACK);
-    f3d_lcd_drawChar(17, ST7735_height - 8, 'X', WHITE, BLACK); //also give the user some HUD
-    f3d_lcd_drawChar(62, ST7735_height - 8, 'Y', WHITE, BLACK);
-    f3d_lcd_drawChar(104, ST7735_height - 8, 'Z', WHITE, BLACK);
+    char str[25];
+    sprintf(str, "X:%.2f Y:%.2f Z:%.2f", gyro_data[0], gyro_data[1], gyro_data[2]); //give user some HUD
+    f3d_lcd_drawString(0, ST7735_height - 8, str, WHITE, RED);
     
     //send the textual data via UART
     printf("X: %f\nY: %f\nZ: %f\n\n", gyro_data[0], gyro_data[1], gyro_data[2]);
-
-    f3d_delay_uS(TIMER);
   }
 }
 
