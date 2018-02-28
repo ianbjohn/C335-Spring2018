@@ -1,0 +1,1 @@
+There was still the issue of pixel corruption from previous values being on the lcd screen. So by the suggestion of an AI I wrote 2 helper functions to draw a "dot" (3x3 pixels) and erase a dot. This got rid of the issue. So I guess there's something wrong with my "draw area" function, but I can't figure out what it would be.
