@@ -1,0 +1,8 @@
+Ian Johnson
+C335
+Lab 8
+3/2/18
+
+1.)
+
+2.) It gets the last 2 bits of the byte 5, to see if the C and Z buttons were pressed or not. From there, it sets the nunchuk structure's data accordingly to say which button's were pressed.
