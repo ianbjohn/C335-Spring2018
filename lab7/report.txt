@@ -1,1 +1,14 @@
+Ian Johnson
+C335
+Lab 7
+3/2/18
+
+1.) There appear to be 14 pins. Vdd_IO, SCL, SDA, INT2, INT1, C1, GND, Reserved, DRDY, Reserved, Reserved, SETP, SETC, Vdd. 2.5 volts to power accelerometer. The chip is right above the pins on the right side of the board.
+
+2.) They initialize the settings so we know what device to read from, and how to do it.
+
+3.) It gets the raw data from the buffer and converts it to a floating-point value so the accelerometer code can interpret it.
+
+4.) The z-value of the chip can completely throw off the compass value, which, for the sake of simplicity, is only concerned with x and y values.
+
 There was still the issue of pixel corruption from previous values being on the lcd screen. So by the suggestion of an AI I wrote 2 helper functions to draw a "dot" (3x3 pixels) and erase a dot. This got rid of the issue. So I guess there's something wrong with my "draw area" function, but I can't figure out what it would be.

@@ -84,7 +84,7 @@ int main(void) {
      } else if (mode == 1) {
        //COMPASS HEADING
        //clear old spot
-       erase_dot((ST7735_width / 2) - (((int)(cos(heading) * (float)(ST7735_width / 2))) / MAX) + 1, (ST7735_height / 2) - (((int)(sin(heading) * (float)(ST7735_height / 2))) / MAX) + 1);
+       erase_dot((ST7735_width / 2) + (((int)(cos(heading) * (float)(ST7735_width / 2))) / MAX) + 1, (ST7735_height / 2) + (((int)(sin(heading) * (float)(ST7735_height / 2))) / MAX) + 1);
 
        //get new accel and mag data
        f3d_accel_read(accel_data);
@@ -97,7 +97,7 @@ int main(void) {
        heading = atan2f(yh, xh);
 
        //draw new spot
-       draw_dot((ST7735_width / 2) - (((int)(cos(heading) * (float)(ST7735_width / 2))) / MAX) + 1, (ST7735_height / 2) - (((int)(sin(heading) * (float)(ST7735_height / 2))) / MAX) + 1);
+       draw_dot((ST7735_width / 2) + (((int)(cos(heading) * (float)(ST7735_width / 2))) / MAX) + 1, (ST7735_height / 2) + (((int)(sin(heading) * (float)(ST7735_height / 2))) / MAX) + 1);
      }
      //printf("X: %f\nY: %f\nZ: %f\n\n", accel_data[0], accel_data[1], accel_data[2]);
      printf("Pitch: %f\nRoll: %f\n\n", pitch, roll);
