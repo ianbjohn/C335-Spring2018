@@ -1,0 +1,26 @@
+//Ian Johnson
+//C335
+//2/7/2018
+//Lab 4 (modified from lab 2)
+//Word Count
+
+#include <stdio.h>
+#define SPACE 0x20
+#define NEWLINE 0x0A
+
+int main()
+{
+  int c;
+  int wordcount = 0, linecount = 1, charactercount = 0;
+
+  while ((c = getchar()) != 0x1b) { //esc
+    charactercount++;
+    if (c == SPACE)
+      wordcount++;
+    else if (c == NEWLINE)
+      linecount++;
+  }
+
+  printf("%d\t%d\t%d\n", linecount, wordcount, charactercount);
+  return 0;
+}

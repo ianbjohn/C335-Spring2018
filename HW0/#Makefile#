@@ -1,0 +1,7 @@
+rpn:	main.o cell.o
+	cc -o main.o cell.o rpn
+
+main.o: main.c cell.h
+	cc -c main.c main.o
+cell.o: cell.c cell.h
+	cc -c cell.c cell.o

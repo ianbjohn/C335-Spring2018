@@ -46,6 +46,8 @@ int main(void) {
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
 
+  printf("Test");
+
   int c;
   int wordcount = 0, linecount = 1, charactercount = 0;
 

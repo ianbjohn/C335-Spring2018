@@ -23,7 +23,7 @@ int gitBitsChar(unsigned char c, char answer[]){
     c=c>>1;
     i--;
   }
-  answer[i]=0;
+  answer[8]='\0';
   return 0;
 }
 
@@ -35,7 +35,7 @@ int gitBitsShort(unsigned short s, char answer[]){
     s=s>>1;
     i--;
   }
-  answer[i]=0;
+  answer[16]='\0';
   return 0;
 }
 
@@ -47,7 +47,7 @@ int gitBitsInt(int yikes, char answer[]){
     yikes=yikes>>1;
     i--;
   }
-  answer[i]=0;
+  answer[32]='\0';
   return 0;
 }
 
@@ -57,23 +57,19 @@ int main(){
   setvbuf(stdin, NULL, _IONBF, 0);
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
-  char ans1[16];
-  char ans2[8];
-  char ans3[32];
-  char ans4[32];
+  char ans1[33];
+  char ans2[33];
+  char ans3[33];
+  char ans4[33];
 
   gitBitsShort((unsigned short) 3200, ans1);
-    gitBitsChar((unsigned char) 'a', ans2);
-    gitBitsInt(-94, ans3);
-    gitBitsInt((unsigned int) 234, ans4);
-    
-
-    while (1) {
-      printf("unsigned short 3200= %s\n", ans1);
-    printf("unsigned a = %s\n", ans2);
-    printf("-94 = %s\n", ans3);
-    printf("unsigned 234 = %s\n", ans4);
-    }
+  printf("3200= %s\n", ans1);
+  gitBitsChar((unsigned char) 'a', ans2);
+  printf("unsigned a = %s\n", ans2);
+  gitBitsInt(-94, ans3);
+  printf("-94 = %s\n", ans3);
+  gitBitsInt((unsigned int) 234, ans4);
+  printf("unsigned int 234 = %s\n", ans4);
 }
 
 #ifdef USE_FULL_ASSERT

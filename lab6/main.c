@@ -38,6 +38,12 @@ int main(void) {
     //"clear" the area where the data is going to be drawn by setting the background color there to red (This'll get rid of the white pixels from the previous frame)
     //f3d_lcd_fillArea(8, 0, ST7735_width - 8, 24, RED); //student-defined function
     f3d_gyro_getdata(gyro_data);
+    if (gyro_data[0] > (float)MAX) gyro_data[0] = MAX;
+    else if (gyro_data[0] < -(float)MAX) gyro_data[0] = -MAX;
+    if (gyro_data[1] > (float)MAX) gyro_data[1] = MAX;
+    else if (gyro_data[1] < -(float)MAX) gyro_data[1] = -MAX;
+    if (gyro_data[2] > (float)MAX) gyro_data[2] = MAX;
+    else if (gyro_data[2] < -(float)MAX) gyro_data[2] = -MAX;
     
     //display the gyro data on LCD as a bar graph
     int i;

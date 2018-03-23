@@ -1,0 +1,8 @@
+Speed for original fillscreen function: 90muS
+Speed for fillscreen function 2: 24muS
+~3.75x faster
+
+
+Difficulty getting the LCD to show the data visually as a bar graph
+-Would glitch out completely when showing data for the Y and Z axes
+
