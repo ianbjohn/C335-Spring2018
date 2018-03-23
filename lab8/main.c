@@ -30,15 +30,20 @@ void new_app(int mode);
 int main(void){ 
   // Set up your inits before you go ahead
    f3d_uart_init();
+   delay(100);
    f3d_delay_init();
+   delay(100);
    f3d_lcd_init();
+   delay(100);
    f3d_gyro_init();
+   delay(100);
    f3d_i2c1_init();
-   delay(10);
+   delay(100);
    f3d_accel_init();
-   delay(10);
+   delay(100);
    f3d_mag_init();
-   delay(10);
+   delay(100);
+   printf("Here\n");
    f3d_nunchuk_init();
 
    setvbuf(stdin, NULL, _IONBF, 0);
@@ -59,17 +64,18 @@ int main(void){
    f3d_gyro_getdata(gyro_data);
 
    f3d_nunchuk_read(&nunchuk);
-   printf("%c %c %d %d %d %c %c\n", nunchuk.jx, nunchuk.jy, nunchuk.ax, nunchuk.ay, nunchuk.az, nunchuk.c, nunchuk.z);
+   printf("%x %c %d %d %d %c %c\n", nunchuk.jx, nunchuk.jy, nunchuk.ax, nunchuk.ay, nunchuk.az, nunchuk.c, nunchuk.z);
    delay(TIMER / 100);
 
    while(1) {
      //check if nunchuck joystick was moved left or right, and go to previous/next mode respectively
      f3d_nunchuk_read(&nunchuk);
-     if (nunchuk.jy == 0x80 && nunchuk.jx == 0x00) {
+     printf("%d %d %d %d %d %d %c\n", nunchuk.jx, nunchuk.jy, nunchuk.ax, nunchuk.ay, nunchuk.az, nunchuk.c, nunchuk.z);
+     if (nunchuk.jx == 0x00 || nunchuk.z) {
        mode--;
        if (mode < 0) mode = 2;
        new_app(mode);
-     } else if (nunchuk.jy == 0x80 && nunchuk.jx == 0xFF) {
+     } else if (nunchuk.jx == 0xFF || nunchuk.c) {
        mode++;
        if (mode > 2) mode = 0;
        new_app(mode);
