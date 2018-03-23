@@ -43,7 +43,7 @@ void f3d_lcd_sd_interface_init(void) {
  /* vvvvvvvvvvv pin initialization for the LCD goes here vvvvvvvvvv*/ 
   GPIO_InitTypeDef GPIOB_InitStructure;
   GPIO_StructInit(&GPIOB_InitStructure);
-  GPIOB_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12;
+  GPIOB_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12;
   GPIOB_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIOB_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
   GPIOB_InitStructure.GPIO_OType = GPIO_OType_PP;

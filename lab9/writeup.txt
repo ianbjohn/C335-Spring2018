@@ -1,0 +1,8 @@
+Ian Johnson
+C335
+3/23/18
+Lab 9
+
+1.) The SD drivers are an abstraction from the SPI driver, so they need to be initialized in much the same way as how the LCD drivers were initialized.
+
+2.)Since the delay_uS function is more granular than the delay function, we can be more specific about how long we want to delay for; as opposed to using a loop that is inaccurate timing-wise.
