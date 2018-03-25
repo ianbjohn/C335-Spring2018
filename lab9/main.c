@@ -47,15 +47,16 @@ void die (FRESULT rc) {
 
 FATFS Fatfs;		/* File system object */
 FIL Fil;		/* File object */
-BYTE Buff[128];		/* File read buffer */
+uint16_t Buff[160][128]; /* File read buffer */
 
 int main(void) { 
   char footer[20];
   int count=0;
-  int i;
+  int i, j;
 
   struct bmpfile_magic magic;
   struct bmpfile_header header;
+  struct bmppixel pixel;
   BITMAPINFOHEADER info;
 
   FRESULT rc;			/* Result code */
@@ -75,6 +76,8 @@ int main(void) {
 
   f_mount(0, &Fatfs);		/* Register volume work area (never fails) */
 
+  f3d_lcd_fillScreen2(RED);
+
   printf("\nOpen an existing file (img1.bmp).\n");
     rc = f_open(&Fil, "IMG1.BMP", FA_READ);
   if (rc) die(rc);
@@ -88,9 +91,9 @@ int main(void) {
   printf("file size: %d offset %d\n", header.filesz, header.bmp_offset);
   f_read(&Fil, (void *) &info, sizeof(info), &br); //get info
   if (rc) die(rc);
-  printf("Width: %d\n", info.width);
+  printf("Width: %d\nHeight:%d\n\n", info.width, info.height);
  
-  
+  /*
   printf("\nType the file content.\n");
   for (;;) {
     rc = f_read(&Fil, Buff, sizeof Buff, &br);	//Read a chunk of file 
@@ -100,6 +103,17 @@ int main(void) {
     putchar('\n');
   }
   if (rc) die(rc);
+  */
+
+  for (i = 0; i < info.height; i++) {
+    for (j = 0; j < info.width; j++) {
+      //read three bytes at a time and put them into the pixel structure
+      f_read(&Fil, (void *) &pixel, sizeof(pixel), &br);
+      //printf("pixel %d,%d : %d,%d,%d\n", i, j, pixel.r, pixel.g, pixel.b);
+      Buff[i][j] = (uint16_t)(pixel.r >> 3) | (uint16_t)((pixel.g >> 2) << 5) | (uint16_t)((pixel.b >> 3) << 11);
+    }
+  }
+  f3d_lcd_fillScreen3(Buff);
   
   printf("\nClose the file.\n");
   rc = f_close(&Fil);
