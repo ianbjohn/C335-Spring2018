@@ -281,12 +281,9 @@ void f3d_lcd_fillScreen2(uint16_t color) {
   }
 }
 
-void f3d_lcd_fillScreen3(uint16_t** colors) {
-  //similar to fillScreen2, but an array of colors is passed instead of just one single color
-  uint8_t y;
-  f3d_lcd_setAddrWindow(0, 0, ST7735_width - 1, ST7735_height - 1, MADCTLGRAPHICS);
-  for (y = 0; y < ST7735_height; y++)
-    f3d_lcd_pushColor(colors[y], ST7735_width);
+void f3d_lcd_fillRow(uint8_t y, uint16_t* colors) {
+  f3d_lcd_setAddrWindow(0, y, ST7735_width - 1, ST7735_height - 1, MADCTLGRAPHICS);
+  f3d_lcd_pushColor(colors, ST7735_width);
 }
 
 void f3d_lcd_fillArea(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height, uint16_t color) {
