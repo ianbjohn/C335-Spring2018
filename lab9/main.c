@@ -39,6 +39,7 @@
 #include <diskio.h>
 #include <stdio.h>
 #include "bmp.h"
+#include <string.h>
 
 void die (FRESULT rc) {
   printf("Failed with rc=%u.\n", rc);
@@ -60,11 +61,12 @@ struct bmpfile_header header;
 struct bmppixel pixel;
 BITMAPINFOHEADER info;
 
+float accel_data[3];
+
 //file names strings
 const char* fileNames[3] = {"IMG1.BMP", "IMG2.BMP", "IMG3.BMP"};
 
 int main(void) { 
-  char footer[20];
   int count=0;
   nunchuk_t nunchuk;
 
@@ -96,19 +98,26 @@ int main(void) {
       else if C button pressed
         move to previous image
     */
+    
+    memset(&nunchuk, 0, sizeof(nunchuk_t));
     f3d_nunchuk_read(&nunchuk);
+    f3d_accel_read(accel_data);  //get new accel data
+
     if (nunchuk.z) {
+      //printf("%d %d %d %d %d %d %d\n", nunchuk.jx, nunchuk.jy, nunchuk.ax, nunchuk.ay, nunchuk.az, nunchuk.c, nunchuk.z);
       if ((++count) > 2) {
 	count = 0;
       }
       loadImage(count);
+      f3d_nunchuk_read(&nunchuk);
     } else if (nunchuk.c) {
       if ((--count) < 0) {
 	count = 2;
       }
       loadImage(count);
+      f3d_nunchuk_read(&nunchuk);
     }
-    delay(100);
+    //delay(100);
   }
 }
 
