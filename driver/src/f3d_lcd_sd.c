@@ -282,8 +282,13 @@ void f3d_lcd_fillScreen2(uint16_t color) {
 }
 
 void f3d_lcd_fillRow(uint8_t y, uint16_t* colors) {
-  f3d_lcd_setAddrWindow(0, y, ST7735_width - 1, ST7735_height - 1, MADCTLGRAPHICS);
+  f3d_lcd_setAddrWindow(0, y, ST7735_width - 1, y + 1, MADCTLGRAPHICS);
   f3d_lcd_pushColor(colors, ST7735_width);
+}
+
+void f3d_lcd_fillColumn(uint8_t x, uint16_t* colors) {
+  f3d_lcd_setAddrWindow(x, 0, x + 1, 127, MADCTLGRAPHICS);
+  f3d_lcd_pushColor(colors, 128);
 }
 
 void f3d_lcd_fillArea(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height, uint16_t color) {

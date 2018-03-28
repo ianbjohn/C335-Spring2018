@@ -99,6 +99,7 @@ static void f3d_lcd_writeCmd(uint8_t);
 void f3d_lcd_fillScreen(uint16_t);
 void f3d_lcd_fillScreen2(uint16_t);
 void f3d_lcd_fillRow(uint8_t, uint16_t*);
+void f3d_lcd_fillColumn(uint8_t, uint16_t*);
 void f3d_lcd_fillArea(uint16_t, uint16_t, uint16_t, uint16_t, uint16_t);
 void f3d_lcd_drawPixel(uint8_t, uint8_t, uint16_t);
 void f3d_lcd_drawChar(uint8_t, uint8_t, unsigned char, uint16_t, uint16_t);

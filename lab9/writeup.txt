@@ -5,4 +5,10 @@ Lab 9
 
 1.) The SD drivers are an abstraction from the SPI driver, so they need to be initialized in much the same way as how the LCD drivers were initialized.
 
-2.)Since the delay_uS function is more granular than the delay function, we can be more specific about how long we want to delay for; as opposed to using a loop that is inaccurate timing-wise.
+2.) Since the delay_uS function is more granular than the delay function, we can be more specific about how long we want to delay for; as opposed to using a loop that is inaccurate timing-wise.
+
+3.) Large memory writes can be performed much faster with DMA, while still being only a small percentage of the CPU's total time budget. Therefore, using DMA properly, an image can be drawn to the LCD faster than by other means.
+
+
+I learned how to push rows of pixels to the LCD driver, something I didn't understand fully and therefore didn't think was possible. (I thought there could only be one color for each "push".)
+Getting the picture to flip/orient was the biggest challenge. The way I did it was still pretty shoddy and uses a bunch of compares, branches, and hard-coded magic numbers, but it gets the job done more or less.
