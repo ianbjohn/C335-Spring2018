@@ -38,5 +38,7 @@ void f3d_uart_init(void);
 int putchar(int);
 int getchar(void);
 void putstring(char *);
+void USART1_IRQHandler(void);
+void flush_uart(void);
 
 /* f3d_uart.h ends here */

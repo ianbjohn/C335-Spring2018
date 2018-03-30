@@ -9,7 +9,6 @@ ASFLAGS = -g
 
 OBJS=  $(STARTUP) 	main.o \
 			f3d_led.o \
-			f3d_user_btn.o \
 			f3d_uart.o \
 			f3d_gyro.o \
 			f3d_lcd_sd.o \
@@ -21,6 +20,7 @@ OBJS=  $(STARTUP) 	main.o \
 			f3d_nunchuk.o \
 			f3d_rtc.o \
 			f3d_systick.o \
+			queue.o \
 			stm32f30x_rcc.o \
 			stm32f30x_gpio.o \
 			stm32f30x_usart.o \
