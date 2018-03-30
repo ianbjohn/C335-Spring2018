@@ -3,6 +3,14 @@ C335
 Lab 8
 3/2/18
 
+I think the biggest challenge was integrating all the stuff from the previous 2 labs into one program, and having it all work correctly while still having the code be maintainable and clean.
+
+The most interesting part to me was learning how a nunchuk actually works.
+
 1.)
 
 2.) It gets the last 2 bits of the byte 5, to see if the C and Z buttons were pressed or not. From there, it sets the nunchuk structure's data accordingly to say which button's were pressed.
+
+3.) The variables correspond to the position of the joystick (x and y), the magnitude of the accelerometer (x, y and z), and the states of the C and Z buttons (whether or not they're pressed.)
+
+4.) The 2 least significant bits of data[5] correspond to the button states of the nunchuck. There are 4 combinations total, and for each one, the respective variables in the nunchuk structure are set accordingly.

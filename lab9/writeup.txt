@@ -9,6 +9,10 @@ Lab 9
 
 3.) Large memory writes can be performed much faster with DMA, while still being only a small percentage of the CPU's total time budget. Therefore, using DMA properly, an image can be drawn to the LCD faster than by other means.
 
+4.) The file allocation table keeps track of clusters, or small chunks of a file. The clusters are linked together by a singly-linked list. If the table is corrupted, the the cluster chain will be wrong, and the system won't know where the files are located.
+
+5.) As the names suggest, FAT16 is a 16-bit file system, and FAT32 is 32-bit. FAT32 also supports a much larger total volume size, up to 16 terabytes, while 16 only supports up to 4 gigabytes.
+
 
 I learned how to push rows of pixels to the LCD driver, something I didn't understand fully and therefore didn't think was possible. (I thought there could only be one color for each "push".)
-Getting the picture to flip/orient was the biggest challenge. The way I did it was still pretty shoddy and uses a bunch of compares, branches, and hard-coded magic numbers, but it gets the job done more or less.
+Getting the picture to flip/orient was the biggest challenge. The way I did it was still pretty shoddy and uses a bunch of compares, branches, and hard-coded magic numbers, but it gets the job done more or less. Apparently maniuplating MADCTLGRAPHICS is the better way, but I couldn't figure out how to configure it to draw horizontally rather than vertically
