@@ -1,0 +1,13 @@
+//Ian Johnson
+//C335
+//HW4 - Multiplication by 7 test suite
+//4/4/18
+
+#include <stdio.h>
+#include "mult_by_7.h"
+
+int main()
+{
+  //test with each combination of products with 0-100
+  
+}
