@@ -9,6 +9,7 @@ DATE CREATED: 2/9/2018
 #include <stm32f30x.h>
 #include <stm32f30x_gpio.h>
 #include <stm32f30x_rcc.h>
+#include <queue.h>
 #include <f3d_led.h>
 
 static int TxPrimed = 0;
@@ -65,18 +66,16 @@ void f3d_uart_init(void) {
 }
 //prints the char given in the serialT command
 int putchar(int c){
-  while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == (uint16_t)RESET);
-  USART_SendData(USART1, c);
-  return 0;
+  enqueue(&txbuf, c);
+  if (!TxPrimed) {
+    TxPrimed = 1;
+    flush_uart();
+  }
 }
 
 //reads the char provided in serialT command
 int getchar(void){
-  int c = 0;
-  if(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) != (uint16_t)RESET){
-  c = USART_ReceiveData(USART1);
-  }
-  return c;
+  return dequeue(&rxbuf);
 }
 
 //prints the string given in the serialT command

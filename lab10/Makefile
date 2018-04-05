@@ -9,6 +9,7 @@ ASFLAGS = -g
 
 OBJS=  $(STARTUP) 	main.o \
 			f3d_led.o \
+			f3d_user_btn.o \
 			f3d_uart.o \
 			f3d_gyro.o \
 			f3d_lcd_sd.o \
@@ -29,8 +30,7 @@ OBJS=  $(STARTUP) 	main.o \
 			stm32f30x_rtc.o \
 			stm32f30x_tim.o \
 			stm32f30x_pwr.o \
-			ff.o \
-			mmcbb.o \
+			stm32f30x_misc.o \
 			newlib_stubs.o
 # include common make file
 
