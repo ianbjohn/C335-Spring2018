@@ -1,0 +1,19 @@
+Ian Johnson
+C335
+Lab11
+4/6/18
+
+1.) The peripheral base address points to the SPI data register. We need to knwo where to start writing / reading data from.
+
+2.)
+
+3.)
+
+4.)
+
+5.) They both can't access the same part of memory at once
+
+Updating the LCD/SD driver was difficult, there were lots of little bits that made it confusing and difficult for me, and it was further complicated by weird compiler errors.
+
+I learned more about DMA and how it actually works in a "code" sense.
+It also took a while for the audio to finally get played, as I had to make sure a bunch of different header files were correct.
