@@ -66,7 +66,7 @@ void f3d_uart_init(void) {
 }
 //prints the char given in the serialT command
 int putchar(int c){
-  enqueue(&txbuf, c);
+  while (!enqueue(&txbuf, c));
   if (!TxPrimed) {
     TxPrimed = 1;
     flush_uart();
@@ -75,7 +75,12 @@ int putchar(int c){
 
 //reads the char provided in serialT command
 int getchar(void){
-  return dequeue(&rxbuf);
+  int c;
+  while (1) {
+    c = dequeue(&rxbuf);
+    if (c != 0) break;
+  }
+  return c;
 }
 
 //prints the string given in the serialT command
