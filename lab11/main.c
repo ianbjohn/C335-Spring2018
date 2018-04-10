@@ -36,7 +36,6 @@
 #include <f3d_nunchuk.h>
 #include <f3d_rtc.h>
 #include <f3d_systick.h>
-#include <f3d_timer2.h>
 #include <f3d_dac.h>
 #include <queue.h>
 #include <ff.h>
@@ -88,8 +87,8 @@ void die (FRESULT rc) {
 void play_sound(int i);
 
 int main(void) { 
-  nunchuk_t nunchuk;
-  unsigned int selected_wav = 0; //index the current selected wav file
+  nunchuk_t nunchuk, nunchuk_old;
+  int selected_wav = 0; //index the current selected wav file
 
   setvbuf(stdin, NULL, _IONBF, 0);
   setvbuf(stdout, NULL, _IONBF, 0);
@@ -116,38 +115,38 @@ int main(void) {
   delay(100);
   f3d_lcd_init();
   delay(100);
-  //f3d_nunchuk_init();
-  //printf("Nunchuk working.\n");
-  //delay(100);
+  f3d_nunchuk_init();
+  printf("Nunchuk working.\n");
+  delay(100);
 
   printf("Reset\n");
 
   while (1) {
     //main loop
     
-    
-    /*
     f3d_nunchuk_read(&nunchuk);
 
     if (nunchuk.z) {
      play_sound(selected_wav);
-    } else if (nunchuk.jx == 0xFF) {
+    } else if (nunchuk.jx == 0xFF || nunchuk.ax < 150) {
       selected_wav++;
       selected_wav %= 5;
       printf("%d\n", selected_wav);
-    } else if (nunchuk.jx == 0x00) {
+    } else if (nunchuk.jx == 0x00 || nunchuk.ax > 850) {
       selected_wav--;
-      selected_wav %= 5;
+      if (selected_wav < 0) selected_wav = 4;
       printf("%d\n", selected_wav);
     }
-    printf("%x %c %d %d %d %c %c\n", nunchuk.jx, nunchuk.jy, nunchuk.ax, nunchuk.ay, nunchuk.az, nunchuk.c, nunchuk.z);
-    */
+    //printf("%d     %d     %d\n", nunchuk.ax, nunchuk.ay, nunchuk.az);
+    delay(100);
 
+    /*
     if (f3d_user_btn_read()) {
       play_sound(selected_wav);
       selected_wav++;
       selected_wav %= 5;
     }
+    */
   }
 }
 
@@ -159,7 +158,7 @@ void play_sound(int i) {
   unsigned int retval;
   int bytesread;
 
-  const char* wavs[5] = {"thermo.wav", "sound1.wav", "sound2.wav", "sound3.wav", "sound4.wav"}; //wav file names
+  const char* wavs[5] = {"thermo.wav", "sound1_8.wav", "sound2_8.wav", "sound3_8.wav", "sound4_8.wav"}; //wav file names
 
   f_mount(0, &Fatfs);/* Register volume work area */
   printf("\nOpen %s\n", wavs[i]);
@@ -209,8 +208,8 @@ void play_sound(int i) {
     printf("Samples %d\n", hd.cksize);
     
     // Play it !
-    
-    audioplayerInit(fck.nSamplesPerSec);
+    // audioplayerInit(fck.nSamplesPerSec);
+    f3d_timer2_enable(fck.nSamplesPerSec);
     
     f_read(&fid, Audiobuf, AUDIOBUFSIZE, &ret);
     hd.cksize -= ret;

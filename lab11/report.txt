@@ -5,7 +5,7 @@ Lab11
 
 1.) The peripheral base address points to the SPI data register. We need to knwo where to start writing / reading data from.
 
-2.)
+2.) The DMA controller will automatically increment the address it's pointing to after reading from / writing to it.
 
 3.)
 
@@ -15,7 +15,7 @@ Lab11
 
 Updating the LCD/SD driver was difficult, there were lots of little bits that made it confusing and difficult for me, and it was further complicated by weird compiler errors.
 
-Converting audio I found difficult, since my audio_init function somehow wound up being blank, and I couldn't find any information in the lab manual about what to do for this. It also wasn't in the original driver file. Converting my WAV files to the correct sample rate / bit rate was really frustrating, and I can't help but feel that I made it way more difficult than it was supposed to be. I converted everything to 16 bit, which still sounded corrupted.
+Converting audio was difficult, but I finally figured out how to do it with Audacity. I don't know if the program was supposed to be able to handle different bitrates, but the sounds were able to be played after conversion
 
 I learned more about DMA and how it actually works in a "code" sense.
 It also took a while for the audio to finally get played, as I had to make sure a bunch of different header files were correct.
