@@ -19,6 +19,7 @@ OBJS=  $(STARTUP) 	main.o \
 			f3d_systick.o \
 			f3d_dac.o \
 			f3d_timer2.o \
+			f3d_nunchuk.o \
 			queue.o \
 			stm32f30x_rcc.o \
 			stm32f30x_gpio.o \

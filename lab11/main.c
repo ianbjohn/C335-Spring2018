@@ -85,14 +85,11 @@ void die (FRESULT rc) {
   while (1);
 }
 
-int main(void) { 
+void play_sound(int i);
 
-  FRESULT rc;			/* Result code */
-  DIR dir;			/* Directory object */
-  FILINFO fno;			/* File information object */
-  UINT bw, br;
-  unsigned int retval;
-  int bytesread;
+int main(void) { 
+  nunchuk_t nunchuk;
+  unsigned int selected_wav = 0; //index the current selected wav file
 
   setvbuf(stdin, NULL, _IONBF, 0);
   setvbuf(stdout, NULL, _IONBF, 0);
@@ -100,7 +97,10 @@ int main(void) {
 
   f3d_uart_init();
   delay(100);
+  printf("OK\n");
   f3d_timer2_init();
+  delay(100);
+  f3d_user_btn_init();
   delay(100);
   f3d_i2c1_init();
   delay(100);
@@ -116,13 +116,54 @@ int main(void) {
   delay(100);
   f3d_lcd_init();
   delay(100);
+  //f3d_nunchuk_init();
+  //printf("Nunchuk working.\n");
+  //delay(100);
 
   printf("Reset\n");
-  
-  f_mount(0, &Fatfs);/* Register volume work area */
 
-  printf("\nOpen thermo.wav\n");
-  rc = f_open(&fid, "thermo.wav", FA_READ);
+  while (1) {
+    //main loop
+    
+    
+    /*
+    f3d_nunchuk_read(&nunchuk);
+
+    if (nunchuk.z) {
+     play_sound(selected_wav);
+    } else if (nunchuk.jx == 0xFF) {
+      selected_wav++;
+      selected_wav %= 5;
+      printf("%d\n", selected_wav);
+    } else if (nunchuk.jx == 0x00) {
+      selected_wav--;
+      selected_wav %= 5;
+      printf("%d\n", selected_wav);
+    }
+    printf("%x %c %d %d %d %c %c\n", nunchuk.jx, nunchuk.jy, nunchuk.ax, nunchuk.ay, nunchuk.az, nunchuk.c, nunchuk.z);
+    */
+
+    if (f3d_user_btn_read()) {
+      play_sound(selected_wav);
+      selected_wav++;
+      selected_wav %= 5;
+    }
+  }
+}
+
+void play_sound(int i) {
+ FRESULT rc;			/* Result code */
+  DIR dir;			/* Directory object */
+  FILINFO fno;			/* File information object */
+  UINT bw, br;
+  unsigned int retval;
+  int bytesread;
+
+  const char* wavs[5] = {"thermo.wav", "sound1.wav", "sound2.wav", "sound3.wav", "sound4.wav"}; //wav file names
+
+  f_mount(0, &Fatfs);/* Register volume work area */
+  printf("\nOpen %s\n", wavs[i]);
+  rc = f_open(&fid, wavs[i], FA_READ);
   
   if (rc) die(rc);
   else {
@@ -136,7 +177,7 @@ int main(void) {
     
     f_read(&fid, &waveid, sizeof(waveid), &ret);
     if ((ret != sizeof(waveid)) || (waveid != 'EVAW'))
-      return -1;
+      return;
     
     readckhd(&fid, &hd, ' tmf');
     
@@ -158,7 +199,7 @@ int main(void) {
     
     // now skip all non-data chunks !
     
-    while(1){
+    while(1) {
       readckhd(&fid, &hd, 0);
       if (hd.ckID == 'atad')
 	break;
@@ -198,7 +239,6 @@ int main(void) {
   rc = f_close(&fid);
   
   if (rc) die(rc);
-  while (1);
 }
 
 #ifdef USE_FULL_ASSERT
