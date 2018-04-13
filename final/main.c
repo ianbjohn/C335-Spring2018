@@ -47,8 +47,11 @@ int main(void)
 
   printf("Everything working.\n");
   f3d_lcd_fillScreen(RED);
-  f3d_lcd_drawTile(0, 0, tiles, 0);
-  //f3d_lcd_drawPixel(0, 0, tiles[0][0][0]);
+  int i, j;
+  for (i = 0; i < ST7735_width / 16; i++) {
+    for (j = 0; j < ST7735_height / 16; j++)
+      f3d_lcd_drawTile(i * 16, j * 16, tiles, 0);
+  }
 
   while (1);
 
