@@ -52,6 +52,8 @@ extern uint8_t Audiobuf[AUDIOBUFSIZE];
 extern int audioplayerHalf;
 extern int audioplayerWhole;
 
+const char* wavs[5] = {"thermo.wav", "sound1_8.wav", "sound2_8.wav", "sound3_8.wav", "sound4_8.wav"}; //wav file names
+
 FATFS Fatfs;		/* File system object */
 FIL fid;		/* File object */
 BYTE Buff[512];		/* File read buffer */
@@ -121,8 +123,18 @@ int main(void) {
 
   printf("Reset\n");
 
+  f3d_lcd_fillScreen(BLACK);
+
+  int i;
+  for (i = 0; i < 5; i++)
+    f3d_lcd_drawString(8, 8 * i, (char* )wavs[i], WHITE, BLACK); 
+
   while (1) {
     //main loop
+
+    //draw a "cursor" by the selected wav file
+    f3d_lcd_fillArea(0, 0, 8, 40, BLACK);
+    f3d_lcd_drawChar(0, 8 * selected_wav, '*', WHITE, BLACK);
     
     f3d_nunchuk_read(&nunchuk);
 
@@ -158,7 +170,6 @@ void play_sound(int i) {
   unsigned int retval;
   int bytesread;
 
-  const char* wavs[5] = {"thermo.wav", "sound1_8.wav", "sound2_8.wav", "sound3_8.wav", "sound4_8.wav"}; //wav file names
 
   f_mount(0, &Fatfs);/* Register volume work area */
   printf("\nOpen %s\n", wavs[i]);

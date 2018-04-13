@@ -7,7 +7,7 @@ Lab11
 
 2.) The DMA controller will automatically increment the address it's pointing to after reading from / writing to it.
 
-3.)
+3.) Once a request for transferring / receiving has been made, the DMA controller needs to wait for it to get accepted. So it polls the DMA status until it gets reset.
 
 4.)
 
