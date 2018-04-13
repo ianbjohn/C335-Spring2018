@@ -91,6 +91,7 @@
 #define WHITE 0xFFFF
 #define YELLOW 0x07FF
 
+void f3d_lcd_setmadctl(uint8_t ctl);
 void f3d_lcd_sd_interface_init(void);
 void f3d_lcd_init(void);
 void f3d_lcd_setAddrWindow(uint16_t x0,uint16_t y0,uint16_t x1,uint16_t y1,uint8_t madctl);
@@ -99,6 +100,7 @@ static void f3d_lcd_writeCmd(uint8_t);
 void f3d_lcd_fillScreen(uint16_t);
 void f3d_lcd_fillScreen2(uint16_t);
 void f3d_lcd_fillRow(uint8_t, uint16_t*);
+void f3d_lcd_drawTile(uint8_t, uint8_t, uint16_t[][16][16], uint8_t);
 void f3d_lcd_fillColumn(uint8_t, uint16_t*);
 void f3d_lcd_fillArea(uint16_t, uint16_t, uint16_t, uint16_t, uint16_t);
 void f3d_lcd_drawPixel(uint8_t, uint8_t, uint16_t);

@@ -36,8 +36,13 @@
 #include <f3d_lcd_sd.h>
 #include <f3d_delay.h>
 #include <glcdfont.h>
+#include <graphics.h>
 
 static uint8_t madctlcurrent = MADVAL(MADCTLGRAPHICS);
+
+void f3d_lcd_setmadctl(uint8_t ctl) {
+  madctlcurrent = ctl;
+}
 
 void f3d_lcd_sd_interface_init(void) {
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
@@ -282,8 +287,16 @@ void f3d_lcd_fillRow(uint8_t y, uint16_t* colors) {
 }
 
 void f3d_lcd_fillColumn(uint8_t x, uint16_t* colors) {
-  f3d_lcd_setAddrWindow(x, 0, x + 1, 127, MADCTLGRAPHICS);
+  f3d_lcd_setAddrWindow(x, 0, x + 1, 127, madctlcurrent);
   f3d_lcd_pushColor(colors, 128);
+}
+
+void f3d_lcd_drawTile(uint8_t x, uint8_t y, uint16_t graphics[][16][16], uint8_t tile) {
+  f3d_lcd_setAddrWindow(x, y, x + 15, y + 15, MADCTLGRAPHICS);
+  uint8_t i;
+  for (i = 0; i < 16; i++)
+    //printf("x\n", graphics[tile][0][0]);
+    f3d_lcd_pushColor(graphics[tile][i], 16);
 }
 
 void f3d_lcd_fillArea(uint16_t x0, uint16_t y0, uint16_t width, uint16_t height, uint16_t color) {
