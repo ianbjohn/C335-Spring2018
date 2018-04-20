@@ -30,7 +30,7 @@
 #define MINE 9
 #define EMPTY 0 //tile corresponding to the numbers 1-8 have indices 1-9 respectively
 
-unsigned char board[10][8]; //top 4 bytes say what's been done to the square (clicked, flagged), bottom 4 bytes say what type of square it is (empty, number square, mine)
+unsigned char board[10][8] = {0}; //top 4 bytes say what's been done to the square (clicked, flagged), bottom 4 bytes say what type of square it is (empty, number square, mine)
 float accel_data[3];
 
 void draw_tile(int x, int y);
@@ -78,10 +78,8 @@ int main(void)
   //populate the screen with clickable squares, and initialize board array
   int i, j;
   for (i = 0; i < ST7735_height / 16; i++) {
-    for (j = 0; j < ST7735_width / 16; j++) {
-      board[i][j] = 0;
+    for (j = 0; j < ST7735_width / 16; j++)
       f3d_lcd_drawTile(j * 16, i * 16, tiles, 0);
-    }
   }
 
   //board[0][0] = 1;
@@ -236,15 +234,6 @@ uint16_t random() {
   //printf("%d\n", seed);
   f3d_accel_read(accel_data);
   return seed + *((uint16_t *)(&accel_data[0])) + *((uint16_t *)(&accel_data[1])) + *((uint16_t *)(&accel_data[2]));
-}
-
-void draw_board() {
-  int i, j;
-  for (i = 0; i < ST7735_height / 16; i++) {
-    for (j = 0; j < ST7735_width / 16; j++)
-      printf("%d, ", GET_SQUARE_TYPE(j, i));
-    printf("\n");
-  }
 }
 
 #ifdef USE_FULL_ASSERT
