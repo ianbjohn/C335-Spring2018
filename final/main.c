@@ -124,7 +124,6 @@ int main(void)
 	  }
 	}
 	find_mines(cursor_x, cursor_y);
-	draw_board();
       } else {
 	if (CHECK_CLICKED(cursor_x, cursor_y) == 0 && CHECK_FLAGGED(cursor_x, cursor_y) == 0) {
 	  num_clicks++;
