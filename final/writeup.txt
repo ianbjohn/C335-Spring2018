@@ -3,3 +3,5 @@ Idea: Minesweeper
 
 The joystick will move which square is selected, z clicks squares, c sets flags
 The speaker will play a little sound effect when a flag is placed, and an explosion sound when a mine is activated
+
+A challenge was implementing a cursor. When the joystick is moved, the tile where the cursor's at has to be redrawn, the cursor position updated, and then new cursor graphic data is drawn to the LCD.
