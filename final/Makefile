@@ -11,6 +11,7 @@ OBJS=  $(STARTUP) 	main.o \
 			f3d_led.o \
 			f3d_uart.o \
 			f3d_lcd_sd.o \
+			f3d_accel.o \
 			f3d_delay.o \
 			f3d_user_btn.o \
 			glcdfont.o \
