@@ -4,7 +4,7 @@
 //4/20/2018
 
 #include <stm32f30x.h>  // Pull in include files for F30x standard drivers 
-#include <f3d_led.h>     // Pull in include file for the local drivers
+//#include <f3d_led.h>     // Pull in include file for the local drivers
 #include <f3d_uart.h>
 #include <f3d_user_btn.h>
 #include <f3d_lcd_sd.h>
@@ -12,7 +12,7 @@
 #include <f3d_nunchuk.h>
 #include <f3d_delay.h>
 #include <f3d_rtc.h>
-#include <f3d_systick.h>
+//#include <f3d_systick.h>
 #include <f3d_accel.h>
 #include <f3d_dac.h>
 #include <queue.h>
@@ -59,9 +59,12 @@ int main(void)
   f3d_uart_init();
   delay(10);
   printf("Ok.\n");
-  f3d_timer2_init();
-  delay(10);
+  //f3d_timer2_init();
+  //delay(10);
   f3d_i2c1_init();
+  delay(10);
+  printf("mhm\n");
+  //f3d_accel_init();
   delay(10);
   f3d_user_btn_init();
   delay(10);
@@ -72,13 +75,8 @@ int main(void)
   printf("Alright.\n");
   f3d_rtc_init();
   delay(10);
-  f3d_dac_init();
-  delay(10);
-  f3d_systick_init(20000);
-  delay(10);
-  printf("mhm\n");
-  f3d_accel_init();
-  delay(10);
+  //f3d_systick_init(20000);
+  //delay(10);
   printf("Yeah.\n");
   f3d_lcd_init();
   delay(10);
@@ -253,7 +251,7 @@ void find_mines(int x, int y) {
   if ((y + 1 < (ST7735_height / 16)) && (CHECK_CLICKED(x, y + 1) == 0)) {
     if (GET_SQUARE_TYPE(x, y + 1) == MINE)
       count++;
-    else if (GET_SQUARE_TYPE(x, y + 1) == EMPTY && (CHECK_FLAGGED(x, y + 1) & CHECK_QUESTIONED(x, y + 1) == 0))
+    else if (GET_SQUARE_TYPE(x, y + 1) == EMPTY && (CHECK_FLAGGED(x, y + 1) == 0))
       find_mines(x, y + 1);
   }
   //bottom-left
