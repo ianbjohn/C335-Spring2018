@@ -1,3 +1,3 @@
 #include <stdint.h>
 
-uint16_t tiles[4][16][16];
+uint16_t tiles[9][16][16];

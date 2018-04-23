@@ -1,7 +1,8 @@
 Ian Johnson
 Idea: Minesweeper
 
-The joystick will move which square is selected, z clicks squares, c sets flags
-The speaker will play a little sound effect when a flag is placed, and an explosion sound when a mine is activated
+The joystick will move which square is selected, z clicks squares, and csets flags / question marks.
+The speaker will play a little sound effect when a flag is placed, and an explosion sound when a mine is activated.
+The accelerometer is used to generate "random noise" which is used as the seed in the RNG to generate where the mines will be.
 
 A challenge was implementing a cursor. When the joystick is moved, the tile where the cursor's at has to be redrawn, the cursor position updated, and then new cursor graphic data is drawn to the LCD.
