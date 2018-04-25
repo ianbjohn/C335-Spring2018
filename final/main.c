@@ -14,6 +14,7 @@
 #include <f3d_rtc.h>
 //#include <f3d_systick.h>
 #include <f3d_accel.h>
+#include <f3d_mag.h>
 #include <f3d_dac.h>
 #include <queue.h>
 #include <graphics.h>
@@ -30,8 +31,12 @@
 #define CHECK_CLICKED(X,Y) (board[Y][X] & 0b00010000) //check if selected square has already been clicked
 #define GET_SQUARE_TYPE(X,Y) (board[Y][X] & 0b00001111) //get what type of square it is
 #define SET_SQUARE_TYPE(X,Y,TYPE) (board[Y][X] = TYPE)
-#define MINE 9
+#define FLAG_TILE 10
+#define MINE_TILE 11
+#define CLICKED_MINE_TILE 12
+#define FALSE_MINE_TILE 13
 #define EMPTY 0 //tile corresponding to the numbers 1-8 have indices 1-8 respectively
+#define MINE 9
 #define NUM_MINES 10
 #define BOARD_WIDTH ST7735_width / 16
 #define BOARD_HEIGHT ST7735_height / 16
@@ -43,6 +48,8 @@ int game_state = 0;		//normal playing, game over, game won
 int cursor_x = 0, cursor_y = 0;
 
 void draw_tile(int x, int y);
+void draw_cursor();
+void draw_board();
 void find_mines(int x, int y);
 uint16_t random();
 
@@ -58,19 +65,22 @@ int main(void)
 
   f3d_uart_init();
   delay(10);
+  f3d_delay_init();
+  delay(10);
   printf("Ok.\n");
+  f3d_user_btn_init();
+  delay(10);
+  f3d_lcd_init();
+  delay(10);
   //f3d_timer2_init();
   //delay(10);
   f3d_i2c1_init();
   delay(10);
   printf("mhm\n");
-  //f3d_accel_init();
-  delay(10);
-  f3d_user_btn_init();
+  f3d_accel_init();
+  //f3d_mag_init();
   delay(10);
   f3d_dac_init();
-  delay(10);
-  f3d_delay_init();
   delay(10);
   printf("Alright.\n");
   f3d_rtc_init();
@@ -78,8 +88,6 @@ int main(void)
   //f3d_systick_init(20000);
   //delay(10);
   printf("Yeah.\n");
-  f3d_lcd_init();
-  delay(10);
   printf("Waiting for nunchuk...\n");
   f3d_nunchuk_init();
   delay(10);
@@ -88,50 +96,48 @@ int main(void)
   f3d_lcd_fillScreen(RED);
 
   //populate the screen with clickable squares, and initialize board array
-  int i, j;
-  for (i = 0; i < BOARD_HEIGHT; i++) {
-    for (j = 0; j < BOARD_WIDTH; j++)
-      f3d_lcd_drawTile(j * 16, i * 16, tiles, 0);
-  }
+  draw_board();
   num_squares = BOARD_HEIGHT * BOARD_WIDTH;
+  draw_cursor();
 
   //main loop
   while (1) {
     f3d_nunchuk_read(&nunchuk);
+    printf("%d %d %d %d %d %d %d\n", nunchuk.jx, nunchuk.jy, nunchuk.ax, nunchuk.ay, nunchuk.az, nunchuk.z, nunchuk.c);
 
     if (nunchuk.jx == 0xFF) {
 	//right
-      //"undraw" old cursor
+      draw_tile(cursor_x, cursor_y);  //un-draw old cursor
       if ((++cursor_x) >= BOARD_WIDTH)
 	cursor_x = 0;
-      //draw new cursor
+      draw_cursor();    //draw new cursor
       printf("X: %d, Y: %d\n", cursor_x, cursor_y);
     } else if (nunchuk.jx == 0x00) {
 	//left
-      //"undraw" old cursor
+      draw_tile(cursor_x, cursor_y);
       if ((--cursor_x) < 0)
 	cursor_x = BOARD_WIDTH - 1;
-      //draw new cursor
+      draw_cursor();
       printf("X: %d, Y: %d\n", cursor_x, cursor_y);
     } else if (nunchuk.jy == 0xFF) {
 	//down
-      //"undraw" old cursor
+      draw_tile(cursor_x, cursor_y);
       if ((++cursor_y) >= BOARD_HEIGHT)
 	cursor_y = 0;
-      //draw new cursor
+      draw_cursor();
       printf("X: %d, Y: %d\n", cursor_x, cursor_y);
     } else if (nunchuk.jy == 0x00) {
 	//up
-      //"undraw" old cursor
+      draw_tile(cursor_x, cursor_y);
       if ((--cursor_y) < 0)
 	  cursor_y = BOARD_HEIGHT - 1;
-      //draw new cursor
+      draw_cursor();
       printf("X: %d, Y: %d\n", cursor_x, cursor_y);
     } else if (nunchuk.z) {
       if (num_clicks == 0) {
 	//set random seed based off first click (The first click can never be a mine
 	int mines = 0;
-	int x = 0, y = 0;
+	int x = 3, y = 0;
 	while (mines <= NUM_MINES) {
 	  //int x = random() % (BOARD_WIDTH);
 	  //int y = random() % (BOARD_HEIGHT);
@@ -143,14 +149,16 @@ int main(void)
 	}
 	find_mines(cursor_x, cursor_y);
 	num_clicks++;
+	draw_cursor();
       } else {
 	if (CHECK_CLICKED(cursor_x, cursor_y) == 0 && CHECK_FLAGGED(cursor_x, cursor_y) == 0) {
 	  if (GET_SQUARE_TYPE(cursor_x, cursor_y) == MINE) {
 	    CLICK_SQUARE(cursor_x, cursor_y);
 	    //game over
-	    //re-draw the board drawing mines, with a check over it if it was flagged, and an X over squares that were flagged but which didn't have mines
-	    printf("Game over.\n");
 	    game_state = 1;
+	    //re-draw the board drawing mines, with a check over it if it was flagged, and an X over squares that were flagged but which didn't have mines
+	    draw_board();
+	    printf("Game over.\n");
 	    while(1); //hang the program for now
 	  } else {
 	    //recursively check for adjacent mines, and draw the number
@@ -162,12 +170,15 @@ int main(void)
 		while(1);  //hang the program for now
 	    }
 	  }
+	  draw_cursor();
 	}
       }
     } else if (nunchuk.c) {
-      if (CHECK_CLICKED(cursor_x, cursor_y) == 0)
+      if (CHECK_CLICKED(cursor_x, cursor_y) == 0) {
 	FLAG_SQUARE(cursor_x, cursor_y);
-      //draw the new tile
+	draw_tile(cursor_x, cursor_y);
+	draw_cursor();
+      }
     }
   }
 
@@ -175,28 +186,26 @@ int main(void)
 }
 
 void draw_tile(int x, int y) {
-  /*
   if (CHECK_CLICKED(x, y) == 0) {
     //if it's game over, show the flagged squares as whether or not they had mines
     if (CHECK_FLAGGED(x, y) == 1) {
       if (game_state == 1) {
-	//if game over, draw an X over the flag if there was no mine there, or a check over a mine if there was one there
-	if (GET_SQUARE_TYPE(x, y) == MINE);
-	else;
-      } else; //draw normal flag
+	//if game over, draw an X over the flag if there was no mine there, or a flag over a mine if there was one there
+	if (GET_SQUARE_TYPE(x, y) == MINE)
+	  f3d_lcd_drawTile(x * 16, y * 16, tiles, FLAG_TILE);
+	else
+	  f3d_lcd_drawTile(x * 16, y * 16, tiles, FALSE_MINE_TILE);
+      } else //draw normal flag
+	f3d_lcd_drawTile(x * 16, y * 16, tiles, FLAG_TILE);
     } else
       f3d_lcd_drawTile(x, y, tiles, 0);
   } else {
-    if (x == cursor_x && y == cursor_y) {
-	//draw red around the mine indicating that it went off
-    } else
+    if (GET_SQUARE_TYPE(x, y) == MINE && x == cursor_x && y == cursor_y)
+      //draw red around the mine indicating that it went off
+      f3d_lcd_drawTile(x * 16, y * 16, tiles, CLICKED_MINE_TILE);
+    else
       f3d_lcd_drawTile(x * 16, y * 16, tiles, GET_SQUARE_TYPE(x, y) + 1);
   }
-  */
-
-  if (CHECK_CLICKED(x, y) == 0) {}
-  else
-    f3d_lcd_drawTile(x * 16, y * 16, tiles, GET_SQUARE_TYPE(x, y) + 1);
 }
 
 void find_mines(int x, int y) {
@@ -267,6 +276,22 @@ void find_mines(int x, int y) {
   CLICK_SQUARE(x, y);
   draw_tile(x, y);
   printf("Bla\n");
+}
+
+void draw_cursor() {
+  //a 2x2 pixel yellow dot
+  f3d_lcd_draw_pixel((cursor_x * 16) + 7, (cursor_y * 16) + 7, YELLOW);
+  f3d_lcd_draw_pixel((cursor_x * 16) + 8, (cursor_y * 16) + 7, YELLOW);
+  f3d_lcd_draw_pixel((cursor_x * 16) + 7, (cursor_y * 16) + 8, YELLOW);
+  f3d_lcd_draw_pixel((cursor_x * 16) + 8, (cursor_y * 16) + 8, YELLOW);
+}
+
+void draw_board() {
+  int i, j;
+  for (i = 0; i < BOARD_HEIGHT; i++) {
+    for (j = 0; j < BOARD_WIDTH; j++)
+      f3d_lcd_drawTile(j * 16, i * 16, tiles, GET_TYPE(j, i));
+  }
 }
 
 uint16_t random() {
