@@ -36,7 +36,7 @@
 #include <f3d_lcd_sd.h>
 #include <f3d_delay.h>
 #include <glcdfont.h>
-#include <graphics.h>
+//#include <graphics.h>
 
 static uint8_t madctlcurrent = MADVAL(MADCTLGRAPHICS);
 
