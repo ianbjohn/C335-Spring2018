@@ -26,9 +26,7 @@
 
 //macros that help with keeping track of what's happening on the board
 #define FLAG_SQUARE(X,Y) (board[Y][X] ^= 0b00100000)    //mark the selected square as flagged/unflagged
-#define QUESTION_SQUARE(X,Y) (board[y][x] ^= 0b01000000) //mark the selected square as questioned / unquestioned
 #define CHECK_FLAGGED(X,Y) (board[Y][X] & 0b00100000)  //check if selected square is flagged
-#define CHECK_QUESTIONED(X,Y) (board[y][x] & 0b01000000) //check if selected square is questioned
 #define CLICK_SQUARE(X,Y) (board[Y][X] |= 0b00010000)  //mark the selected square as clicked
 #define CHECK_CLICKED(X,Y) (board[Y][X] & 0b00010000) //check if selected square has already been clicked
 #define GET_SQUARE_TYPE(X,Y) (board[Y][X] & 0b00001111) //get what type of square it is
@@ -39,7 +37,7 @@
 #define FALSE_MINE_TILE 13
 #define EMPTY 0 //tile corresponding to the numbers 1-8 have indices 1-8 respectively
 #define MINE 9
-#define NUM_MINES 10
+#define NUM_MINES 12
 #define BOARD_WIDTH ST7735_width / 16
 #define BOARD_HEIGHT ST7735_height / 16
 #define TIMER 20000
@@ -115,10 +113,11 @@ int main(void)
   delay(10);
   f3d_user_btn_init();
   delay(10);
+  f3d_i2c1_init();
+  delay(10);
   printf("Waiting for Accelerometer\n");
   f3d_accel_init();
-  delay(10);
-  f3d_i2c1_init();
+  printf("Accelerometer initialized.\n");
   delay(10);
   f3d_dac_init();
   delay(10);
@@ -160,30 +159,30 @@ int main(void)
 
 void play() {
   f3d_nunchuk_read(&nunchuk);
-  //printf("%d %d %d %d %d %d %d\n", nunchuk.jx, nunchuk.jy, nunchuk.ax, nunchuk.ay, nunchuk.az, nunchuk.z, nunchuk.c);
+  printf("%d %d %d %d %d %d %d\n", nunchuk.jx, nunchuk.jy, nunchuk.ax, nunchuk.ay, nunchuk.az, nunchuk.z, nunchuk.c);
 
-  if (nunchuk.jx == 0xFF) {
+  if (nunchuk.jx >= 0xC0) {
     //right
     draw_tile(cursor_x, cursor_y);  //un-draw old cursor
     if ((++cursor_x) >= BOARD_WIDTH)
       cursor_x = 0;
     draw_cursor();    //draw new cursor
     printf("X: %d, Y: %d\n", cursor_x, cursor_y);
-  } else if (nunchuk.jx == 0x00) {
+  } else if (nunchuk.jx <= 0x40) {
     //left
     draw_tile(cursor_x, cursor_y);
     if ((--cursor_x) < 0)
       cursor_x = BOARD_WIDTH - 1;
     draw_cursor();
     printf("X: %d, Y: %d\n", cursor_x, cursor_y);
-  } else if (nunchuk.jy == 0xFF) {
+  } else if (nunchuk.jy <= 0x40) {
     //down
     draw_tile(cursor_x, cursor_y);
     if ((++cursor_y) >= BOARD_HEIGHT)
       cursor_y = 0;
     draw_cursor();
     printf("X: %d, Y: %d\n", cursor_x, cursor_y);
-  } else if (nunchuk.jy == 0x00) {
+  } else if (nunchuk.jy >= 0xC0) {
     //up
     draw_tile(cursor_x, cursor_y);
     if ((--cursor_y) < 0)
@@ -194,10 +193,10 @@ void play() {
     if (num_clicks == 0) {
       //set random seed based off first click (The first click can never be a mine
       int mines = 0;
-      int x = 3, y = 0;
+      int x, y;
       while (mines <= NUM_MINES) {
-	//int x = random() % (BOARD_WIDTH);
-	//int y = random() % (BOARD_HEIGHT);
+	int x = random() % (BOARD_WIDTH);
+	int y = random() % (BOARD_HEIGHT);
 	if (x != cursor_x && y != cursor_y && GET_SQUARE_TYPE(x, y) == EMPTY) {
 	  SET_SQUARE_TYPE(x, y, MINE);
 	  mines++;
@@ -212,11 +211,11 @@ void play() {
 	if (GET_SQUARE_TYPE(cursor_x, cursor_y) == MINE) {
 	  CLICK_SQUARE(cursor_x, cursor_y);
 	  //game over
-	  play_explosion();
 	  game_state = 1;
 	  //re-draw the board drawing mines, with a check over it if it was flagged, and an X over squares that were flagged but which didn't have mines
 	  draw_board();
 	  f3d_lcd_drawString((ST7735_width / 2) - 20, ST7735_height / 2, "Game Over.", RED, BLACK);
+	  play_explosion();
 	} else {
 	  //recursively check for adjacent mines, and draw the number
 	  find_mines(cursor_x, cursor_y);
@@ -228,20 +227,25 @@ void play() {
 	}
 	draw_cursor();
       }
+      //debug feature
+      //f3d_lcd_drawChar(0,0,(char)num_squares + 48, BLUE, BLACK);
     }
   } else if (nunchuk.c) {
     if (CHECK_CLICKED(cursor_x, cursor_y) == 0) {
       FLAG_SQUARE(cursor_x, cursor_y);
       draw_tile(cursor_x, cursor_y);
       draw_cursor();
+      delay(200);
     }
   }
+
+  delay(100);
 }
 
 void draw_tile(int x, int y) {
   if (CHECK_CLICKED(x, y) == 0) {
     //if it's game over, show the flagged squares as whether or not they had mines
-    if (CHECK_FLAGGED(x, y) == 1) {
+    if (CHECK_FLAGGED(x, y) != 0) {
       if (game_state == 1) {
 	//if game over, draw an X over the flag if there was no mine there, or a flag over a mine if there was one there
 	if (GET_SQUARE_TYPE(x, y) == MINE)
@@ -250,12 +254,17 @@ void draw_tile(int x, int y) {
 	  f3d_lcd_drawTile(x * 16, y * 16, tiles, FALSE_MINE_TILE);
       } else //draw normal flag
 	f3d_lcd_drawTile(x * 16, y * 16, tiles, FLAG_TILE);
-    } else
-      f3d_lcd_drawTile(x * 16, y * 16, tiles, 0);
+    } else {
+      if (game_state == 1 && GET_SQUARE_TYPE(x, y) == MINE)
+	f3d_lcd_drawTile(x * 16, y * 16, tiles, MINE_TILE);
+      else
+	f3d_lcd_drawTile(x * 16, y * 16, tiles, 0);
+    }
   } else {
-    if (GET_SQUARE_TYPE(x, y) == MINE && x == cursor_x && y == cursor_y)
+    if (GET_SQUARE_TYPE(x, y) == MINE && x == cursor_x && y == cursor_y) {
       //draw red around the mine indicating that it went off
       f3d_lcd_drawTile(x * 16, y * 16, tiles, CLICKED_MINE_TILE);
+    }
     else
       f3d_lcd_drawTile(x * 16, y * 16, tiles, GET_SQUARE_TYPE(x, y) + 1);
   }
@@ -264,8 +273,11 @@ void draw_tile(int x, int y) {
 void wait_for_reset() {
   //wait for player to press Z to play the game again.
   f3d_nunchuk_read(&nunchuk);
-  if (nunchuk.z)
+  printf("%d %d %d %d %d %d %d\n", nunchuk.jx, nunchuk.jy, nunchuk.ax, nunchuk.ay, nunchuk.az, nunchuk.z, nunchuk.c);
+  if (nunchuk.z) {
     reset();
+    game_state = 0;
+  }
 }
 
 void find_mines(int x, int y) {
@@ -285,49 +297,49 @@ void find_mines(int x, int y) {
   if ((x - 1 >= 0 && y - 1 >= 0) && (CHECK_CLICKED(x - 1, y - 1) == 0)) {
     if (GET_SQUARE_TYPE(x - 1, y - 1) == MINE)
       count++;
-    else if (GET_SQUARE_TYPE(x - 1, y - 1) == EMPTY && (CHECK_FLAGGED(x - 1, y - 1) == 0))
+    else if (GET_SQUARE_TYPE(x - 1, y - 1) == EMPTY && (CHECK_FLAGGED(x - 1, y - 1) == 0) && count == 0)
       find_mines(x - 1, y - 1);
   }
   //up
   if ((y - 1 >= 0) && (CHECK_CLICKED(x, y - 1) == 0)) {
     if (GET_SQUARE_TYPE(x, y - 1) == MINE)
       count++;
-    else if (GET_SQUARE_TYPE(x, y - 1) == EMPTY && (CHECK_FLAGGED(x, y - 1) == 0))
+    else if (GET_SQUARE_TYPE(x, y - 1) == EMPTY && (CHECK_FLAGGED(x, y - 1) == 0) && count == 0)
       find_mines(x, y - 1);
   }
   //upper-right
   if ((x + 1 < (ST7735_width / 16) && y - 1 >= 0) && (CHECK_CLICKED(x + 1, y - 1) == 0)) {
     if (GET_SQUARE_TYPE(x + 1, y - 1) == MINE)
       count++;
-    else if (GET_SQUARE_TYPE(x + 1, y - 1) == EMPTY && (CHECK_FLAGGED(x + 1, y - 1) == 0))
+    else if (GET_SQUARE_TYPE(x + 1, y - 1) == EMPTY && (CHECK_FLAGGED(x + 1, y - 1) == 0) && count == 0)
       find_mines(x + 1, y - 1);
   }
   //right
   if ((x + 1 < (ST7735_width / 16)) && (CHECK_CLICKED(x + 1, y) == 0)) {
     if (GET_SQUARE_TYPE(x + 1, y) == MINE)
       count++;
-    else if (GET_SQUARE_TYPE(x + 1, y) == EMPTY && (CHECK_FLAGGED(x + 1, y) == 0))
+    else if (GET_SQUARE_TYPE(x + 1, y) == EMPTY && (CHECK_FLAGGED(x + 1, y) == 0) && count == 0)
       find_mines(x + 1, y);
   }
   //bottom-right
   if ((x + 1 < (ST7735_width / 16) && y + 1 < (ST7735_height / 16)) && (CHECK_CLICKED(x + 1, y + 1) == 0)) {
     if (GET_SQUARE_TYPE(x + 1, y + 1) == MINE)
       count++;
-    else if (GET_SQUARE_TYPE(x + 1, y + 1) == EMPTY && (CHECK_FLAGGED(x + 1, y + 1) == 0))
+    else if (GET_SQUARE_TYPE(x + 1, y + 1) == EMPTY && (CHECK_FLAGGED(x + 1, y + 1) == 0) && count == 0)
       find_mines(x + 1, y + 1);
   }
   //bottom
   if ((y + 1 < (ST7735_height / 16)) && (CHECK_CLICKED(x, y + 1) == 0)) {
     if (GET_SQUARE_TYPE(x, y + 1) == MINE)
       count++;
-    else if (GET_SQUARE_TYPE(x, y + 1) == EMPTY && (CHECK_FLAGGED(x, y + 1) == 0))
+    else if (GET_SQUARE_TYPE(x, y + 1) == EMPTY && (CHECK_FLAGGED(x, y + 1) == 0) && count == 0)
       find_mines(x, y + 1);
   }
   //bottom-left
   if ((x >= 0 && y < (ST7735_height / 16)) && (CHECK_CLICKED(x - 1, y + 1) == 0)) {
     if (GET_SQUARE_TYPE(x - 1, y + 1) == MINE)
       count++;
-    else if (GET_SQUARE_TYPE(x - 1, y + 1) == EMPTY && (CHECK_FLAGGED(x - 1, y + 1) == 0))
+    else if (GET_SQUARE_TYPE(x - 1, y + 1) == EMPTY && (CHECK_FLAGGED(x - 1, y + 1) == 0) && count == 0)
       find_mines(x - 1, y + 1);
   }
 
@@ -350,7 +362,7 @@ void draw_board() {
   int i, j;
   for (i = 0; i < BOARD_HEIGHT; i++) {
     for (j = 0; j < BOARD_WIDTH; j++)
-      f3d_lcd_drawTile(j * 16, i * 16, tiles, GET_SQUARE_TYPE(j, i));
+      draw_tile(j, i);
   }
 }
 
@@ -462,7 +474,7 @@ void play_explosion() {
   printf("\nClose the file.\n"); 
   rc = f_close(&fid);
   
-  if (rc) die(rc);
+  //if (rc) die(rc);
 }
 
 #ifdef USE_FULL_ASSERT

@@ -47,7 +47,7 @@ void f3d_nunchuk_init(void) {
 
 
   // Use for factory Wii Nunchuk controllers
-   f3d_i2c1_write(NUNCHUK_ADDRESS,0x40,&realb);
+  f3d_i2c1_write(NUNCHUK_ADDRESS,0x40,&realb);
   // Use for 3 party nunchuks like we have in the lab
   //f3d_i2c1_write(NUNCHUK_ADDRESS,0xf0,&buf); 
   //f3d_i2c1_write(NUNCHUK_ADDRESS,0xfb,&buf2);

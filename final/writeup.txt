@@ -6,3 +6,8 @@ The speaker will play a little sound effect when a flag is placed, and an explos
 The accelerometer is used to generate "random noise" which is used as the seed in the RNG to generate where the mines will be.
 
 A challenge was implementing a cursor. When the joystick is moved, the tile where the cursor's at has to be redrawn, the cursor position updated, and then new cursor graphic data is drawn to the LCD.
+Logic for drawing the right tile was also difficult. I had a high-level function that, depending on whether the tile had been clicked, flagged, was a mine tile, etc, would call f3d_lcd_drawTile with the correct parameters. f3d_lcd_drawTile was a function I added to the lcd driver to push big blocks of my tile data structure to the LCD via lcd_write16
+
+The flood-fill "find mines" function was also a bit of a challenge to implement, and I had to write / draw out a few sketch it a few times. Basically, it keeps track of how many of the surrounding tiles are mines. For each of the adjacent tiles, if it's a mine, it adds to the count, but if it isn't it recursively calls the find mines function on that tile. Once it goes back to the original tile, it'll draw the count. But with just this logic on its own, it would almost always get rid of every single non-mine square. So what I changed was, for when it checks each adjacent square except the first one, it won't recur unless the count is 0. This fixed the issue and made it feel more like real minesweeper.
+
+There were still a couple glitches, like some unclicked tiles are drawn uncorrectly at times, but go back to looking how they should if you move the cursor over them and then move it off of them This also happens, albeit less often, with some numbered tiles.
